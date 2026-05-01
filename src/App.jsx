@@ -1,28 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css'
-import ItemListContainer from './components/ItemListContainer'
+import './App.css';
 
-import ItemCount from "./components/ItemCount"
-import Layout from './components/Layout'
+import ItemListContainer from './components/ItemListContainer';
+import Layout from './components/Layout';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [categoria, setCategoria] = useState("todos");
 
   return (
-    <>
-      <Layout>
-      <h1>Próximamente un E-commerce By Jonas</h1>
+    <Layout setCategoria={setCategoria}>
+      <div className="container mt-4">
 
-      <ItemListContainer saludo="Bienvenido a mi E-commerce" />
+        <h1 className="text-center mb-4">
+          E-commerce Tech
+        </h1>
 
-      <ItemCount />
+        <ItemListContainer 
+          categoria={categoria} 
+          setCategoria={setCategoria} 
+        />
+
+      </div>
     </Layout>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;

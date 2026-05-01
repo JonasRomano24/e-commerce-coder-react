@@ -1,72 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 import Loading from "./Loading";
 import { getProducts } from "../mock/asyncData";
+import CategoryFilter from "./CategoryFilter";
 
-const ItemListContainer = () => {
+const ItemListContainer = ({ categoria, setCategoria }) => {
     const [productos, setProductos] = useState([]);
-    const [productosFiltrados, setProductosFiltrados] = useState([]);
-    const [categoria, setCategoria] = useState("todos");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getProducts()
             .then((respuesta) => {
                 setProductos(respuesta);
-                setProductosFiltrados(respuesta);
             })
             .finally(() => {
                 setLoading(false);
             });
     }, []);
 
-    useEffect(() => {
-        if (categoria === "todos") {
-            setProductosFiltrados(productos);
-        } else {
-            const filtrados = productos.filter(
-                (prod) => prod.categoria === categoria
-            );
+    // ✅ categorías dinámicas
+    const categorias = ["todos", ...new Set(productos.map(p => p.categoria))];
 
-            setProductosFiltrados(filtrados);
-        }
-    }, [categoria, productos]);
+    // ✅ filtrado correcto
+    const productosFiltrados = useMemo(() => {
+        return categoria === "todos"
+            ? productos
+            : productos.filter(prod => prod.categoria === categoria);
+    }, [productos, categoria]);
 
     if (loading) return <Loading />;
 
     return (
         <div className="container">
 
-            {/* Filtros */}
-            <div className="mb-4 text-center">
-                <button
-                    className="btn btn-dark me-2"
-                    onClick={() => setCategoria("todos")}
-                >
-                    Todos
-                </button>
-
-                <button
-                    className="btn btn-primary me-2"
-                    onClick={() => setCategoria("celulares")}
-                >
-                    Celulares
-                </button>
-
-                <button
-                    className="btn btn-success me-2"
-                    onClick={() => setCategoria("computadoras")}
-                >
-                    Computadoras
-                </button>
-
-                <button
-                    className="btn btn-warning"
-                    onClick={() => setCategoria("accesorios")}
-                >
-                    Accesorios
-                </button>
-            </div>
+            {/* 🔥 Filtro conectado al estado global */}
+            <CategoryFilter
+                categorias={categorias}
+                onSelect={setCategoria}
+                active={categoria}
+            />
 
             {/* Productos */}
             <div className="row">
@@ -81,6 +53,10 @@ const ItemListContainer = () => {
                         />
                     </div>
                 ))}
+
+                {productosFiltrados.length === 0 && (
+                    <p className="text-center">No hay productos</p>
+                )}
             </div>
         </div>
     );

@@ -1,10 +1,10 @@
 import NavbarBT from "./NavbarBT";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, setCategoria }) => {
     return (
         <>
             <header>
-                <NavbarBT />
+                <NavbarBT setCategoria={setCategoria} />
             </header>
 
             <main className="container mt-4">
