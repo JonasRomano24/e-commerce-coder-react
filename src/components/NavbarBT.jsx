@@ -1,77 +1,128 @@
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import CartWidget from "./CartWidget";
-import "../css/navbar.css";
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
-function NavbarBT({ setCategoria }) {
+import { Link } from "react-router-dom";
+
+import CartWidget from "./CartWidget";
+
+import "../css/navbar.css";
+
+function NavbarBT({ setBusqueda }) {
+
     return (
-        <Navbar expand="lg" className="bg-dark navbar-dark shadow-sm">
+        <Navbar
+            expand="lg"
+            className="bg-dark navbar-dark shadow-sm"
+        >
+
             <Container>
-                <Navbar.Brand 
-                    onClick={() => setCategoria("todos")}
-                    style={{ cursor: "pointer" }}
+
+                <Navbar.Brand
+                    as={Link}
+                    to="/"
                 >
-                    <img className="logo" src="../logo-tech.png" alt="logo" />
+                    <img
+                        className="logo"
+                        src="../logo-tech.png"
+                        alt="logo"
+                    />
                 </Navbar.Brand>
 
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle
+                    aria-controls="basic-navbar-nav"
+                />
 
                 <Navbar.Collapse id="basic-navbar-nav">
+
                     <Nav className="me-auto">
 
-                        {/* Links principales */}
-                        <Nav.Link onClick={() => setCategoria("todos")}>
+                        <Nav.Link
+                            as={Link}
+                            to="/"
+                        >
                             Inicio
                         </Nav.Link>
 
-                        <Nav.Link onClick={() => setCategoria("celulares")}>
-                            Celulares
+                        <Nav.Link
+                            as={Link}
+                            to="/categoria/ofertas"
+                        >
+                            Ofertas
                         </Nav.Link>
 
-                        <Nav.Link onClick={() => setCategoria("computadoras")}>
-                            Computadoras
+                        <Nav.Link
+                            as={Link}
+                            to="/categoria/destacados"
+                        >
+                            Destacados del mes
                         </Nav.Link>
 
-                        <Nav.Link onClick={() => setCategoria("accesorios")}>
-                            Accesorios
-                        </Nav.Link>
+                        <NavDropdown
+                            title="Categorías"
+                            id="basic-nav-dropdown"
+                        >
 
-                        {/* Dropdown dinámico */}
-                        <NavDropdown title="Categorías" id="basic-nav-dropdown">
-                            <NavDropdown.Item onClick={() => setCategoria("todos")}>
+                            <NavDropdown.Item
+                                as={Link}
+                                to="/"
+                            >
                                 Todos
                             </NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => setCategoria("celulares")}>
+
+                            <NavDropdown.Item
+                                as={Link}
+                                to="/categoria/celulares"
+                            >
                                 Celulares
                             </NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => setCategoria("computadoras")}>
+
+                            <NavDropdown.Item
+                                as={Link}
+                                to="/categoria/computadoras"
+                            >
                                 Computadoras
                             </NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => setCategoria("accesorios")}>
+
+                            <NavDropdown.Item
+                                as={Link}
+                                to="/categoria/accesorios"
+                            >
                                 Accesorios
                             </NavDropdown.Item>
+
                         </NavDropdown>
 
                         <CartWidget />
+
                     </Nav>
 
-                    {/* Buscador (UI por ahora) */}
                     <Form className="d-flex">
+
                         <Form.Control
                             type="search"
                             placeholder="Buscar productos..."
                             className="me-2"
+                            onChange={(e) =>
+                                setBusqueda(
+                                    e.target.value
+                                )
+                            }
                         />
+
                         <Button variant="outline-light">
                             Buscar
                         </Button>
+
                     </Form>
+
                 </Navbar.Collapse>
+
             </Container>
+
         </Navbar>
     );
 }

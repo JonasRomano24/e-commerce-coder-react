@@ -1,4 +1,4 @@
-const productos = [
+const productosDestacados = [
     {
         id: 1,
         titulo: "Samsung Galaxy A35",
@@ -367,10 +367,27 @@ const productos = [
     }
 ];
 
+const productosConTags = productosDestacados.map((producto) => {
+
+    return {
+        ...producto,
+
+        // 15 productos aleatorios en oferta
+        oferta: producto.id <= 15,
+
+        // 15 productos aleatorios destacados
+        destacado:
+            producto.id >= 10 &&
+            producto.id <= 25
+    };
+
+});
+
+
 export const getProducts = () => {
     return new Promise((resolve) => {
         setTimeout(() => {
-            resolve(productos);
+            resolve(productosConTags);
         }, 3000);
     });
 };

@@ -1,4 +1,20 @@
-const ProductCard = ({ titulo, imagen, descripcion, precio, boton }) => {
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+
+const ProductCard = ({ id, titulo, imagen, descripcion, precio }) => {
+
+    const navigate = useNavigate();
+    const { addToCart } = useCart();
+
+    const handleNavigate = () => {
+        navigate(`/producto/${id}`);
+    };
+
+    const handleAddToCart = (e) => {
+        e.stopPropagation(); // evita que dispare el click de la card
+        addToCart({ id, titulo, precio, imagen });
+    };
+
     return (
         <div
             className="card h-100 border-0"
@@ -6,6 +22,7 @@ const ProductCard = ({ titulo, imagen, descripcion, precio, boton }) => {
                 transition: "all 0.3s ease",
                 cursor: "pointer"
             }}
+            onClick={handleNavigate}
             onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-5px)";
                 e.currentTarget.style.boxShadow = "0 10px 25px rgba(0,0,0,0.15)";
@@ -27,10 +44,8 @@ const ProductCard = ({ titulo, imagen, descripcion, precio, boton }) => {
 
             <div className="card-body d-flex flex-column">
 
-                {/* Título */}
                 <h5 className="card-title fw-bold">{titulo}</h5>
 
-                {/* Descripción */}
                 <p
                     className="card-text text-muted"
                     style={{
@@ -41,25 +56,33 @@ const ProductCard = ({ titulo, imagen, descripcion, precio, boton }) => {
                     {descripcion}
                 </p>
 
-                {/* Precio */}
                 <h4 className="mt-auto fw-bold text-dark">
-                    ${precio.toLocaleString()}
+                    ${precio?.toLocaleString()}
                 </h4>
 
-                {/* Botón */}
+                {/* BOTÓN AGREGAR */}
                 <button
-                    className="btn btn-dark mt-3 w-100"
-                    style={{
-                        transition: "all 0.2s ease"
-                    }}
-                    onMouseEnter={(e) => {
-                        e.target.style.opacity = "0.85";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.target.style.opacity = "1";
+                    onClick={() =>
+                        addToCart({
+                            id,
+                            titulo,
+                            precio,
+                            imagen
+                        })
+                    }
+                >
+                    Agregar al carrito
+                </button>
+
+                {/* BOTÓN DETALLE */}
+                <button
+                    className="btn btn-outline-dark mt-2 w-100"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleNavigate();
                     }}
                 >
-                    {boton}
+                    Ver detalle
                 </button>
             </div>
         </div>

@@ -1,65 +1,63 @@
-import { useEffect, useState, useMemo } from "react";
-import ProductCard from "./ProductCard";
-import Loading from "./Loading";
-import { getProducts } from "../mock/asyncData";
+import ProductSlider from "./ProductSlider";
+import ProductGrid from "./ProductGrid";
 import CategoryFilter from "./CategoryFilter";
 
-const ItemListContainer = ({ categoria, setCategoria }) => {
-    const [productos, setProductos] = useState([]);
-    const [loading, setLoading] = useState(true);
+import { getProducts } from "../mock/asyncData";
+import { useDestacados } from "../hooks/useDestacados";
+import { useProductos } from "../hooks/useProductos";
+import { filterProducts } from "../helpers/filterProducts";
+import { useParams } from "react-router-dom";
 
-    useEffect(() => {
-        getProducts()
-            .then((respuesta) => {
-                setProductos(respuesta);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
+function ItemListContainer({ busqueda }) {
 
-    // ✅ categorías dinámicas
-    const categorias = ["todos", ...new Set(productos.map(p => p.categoria))];
-
-    // ✅ filtrado correcto
-    const productosFiltrados = useMemo(() => {
-        return categoria === "todos"
-            ? productos
-            : productos.filter(prod => prod.categoria === categoria);
-    }, [productos, categoria]);
-
-    if (loading) return <Loading />;
+    const { categoria = "todos" } = useParams();
+    const { destacados, loading, error } = useDestacados(categoria);
+    const { productos } = useProductos(categoria);
 
     return (
-        <div className="container">
-
-            {/* 🔥 Filtro conectado al estado global */}
+        <div className="container mt-4">
             <CategoryFilter
-                categorias={categorias}
-                onSelect={setCategoria}
+                categorias={[
+                    "todos",
+                    "celulares",
+                    "computadoras",
+                    "accesorios"
+                ]}
                 active={categoria}
             />
 
-            {/* Productos */}
-            <div className="row">
-                {productosFiltrados.map((prod) => (
-                    <div className="col-md-4 mb-4" key={prod.id}>
-                        <ProductCard
-                            titulo={prod.titulo}
-                            imagen={prod.imagen}
-                            descripcion={prod.descripcion}
-                            precio={prod.precio}
-                            boton="Agregar al carrito"
-                        />
-                    </div>
-                ))}
+            <h2 className="mb-3 text-warning">
+                🔥 Destacados
+            </h2>
 
-                {productosFiltrados.length === 0 && (
-                    <p className="text-center">No hay productos</p>
+            {loading && <h5>Cargando...</h5>}
+
+            {error && (
+                <h5 className="text-danger">
+                    Error al cargar productos
+                </h5>
+            )}
+
+            <ProductSlider
+                productos={filterProducts(
+                    destacados,
+                    busqueda
                 )}
-            </div>
+            />
+
+            <h2 className="mt-5">
+                📱 Catálogo
+            </h2>
+
+            <ProductGrid
+                productos={filterProducts(
+                    productos,
+                    busqueda
+                )}
+            />
+
         </div>
     );
-};
+}
 
 export default ItemListContainer;

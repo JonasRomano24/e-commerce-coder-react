@@ -1,8 +1,35 @@
-/* .nav-container{
-  background-color: black;
-  padding: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* 🔥 Slider destacados */
+
+/* Ocultar scrollbar */
+#sliderDestacados::-webkit-scrollbar {
+  display: none;
 }
-  */
+
+#sliderDestacados {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+
+/* Cada card */
+#sliderDestacados > div {
+  scroll-snap-align: start;
+  flex: 0 0 20%;   /* 5 en desktop */
+  max-width: 20%;
+}
+
+/* 📱 Tablet */
+@media (max-width: 992px) {
+  #sliderDestacados > div {
+    flex: 0 0 33.33%; /* 3 visibles */
+    max-width: 33.33%;
+  }
+}
+
+/* 📱 Mobile */
+@media (max-width: 576px) {
+  #sliderDestacados > div {
+    flex: 0 0 50%; /* 2 visibles */
+    max-width: 50%;
+  }
+}
