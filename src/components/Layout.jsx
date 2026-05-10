@@ -4,9 +4,8 @@ const Layout = ({ children, setCategoria, setBusqueda }) => {
     return (
         <>
             <header>
-                <NavbarBT 
-                    setCategoria={setCategoria}
-                    setBusqueda={setBusqueda} // 🔥 NUEVO
+                <NavbarBT
+                    setBusqueda={setBusqueda}
                 />
             </header>
 

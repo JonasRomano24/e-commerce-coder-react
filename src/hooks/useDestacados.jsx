@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { getProducts } from "../mock/asyncData";
+import { categoriasMap } from "../data/categorias";
+import { adaptProducts } from "../helpers/adaptProducts";
 
 export const useDestacados = (categoria) => {
 
@@ -10,74 +11,81 @@ export const useDestacados = (categoria) => {
 
     useEffect(() => {
 
-        setLoading(true);
-        setError(false);
+        const fetchData = async () => {
 
-        getProducts()
+            try {
 
-            .then((data) => {
+                setLoading(true);
+                setError(false);
 
-                let filtrados = [];
+                let urls = [];
 
                 // OFERTAS
 
                 if (categoria === "ofertas") {
 
-                    filtrados = data.filter(
-                        (p) => p.oferta
-                    );
+                    urls = [
+                        "https://dummyjson.com/products/category/smartphones"
+                    ];
 
                 }
 
                 // DESTACADOS
 
-                else if (
-                    categoria === "destacados"
-                ) {
+                else if (categoria === "destacados") {
 
-                    filtrados = data.filter(
-                        (p) => p.destacado
-                    );
+                    urls = [
+                        "https://dummyjson.com/products/category/laptops"
+                    ];
 
                 }
 
                 // CATEGORÍAS
 
-                else if (
-                    categoria !== "todos"
-                ) {
-
-                    filtrados = data.filter(
-                        (p) =>
-                            p.categoria === categoria
-                    );
-
-                }
-
-                // TODOS
-
                 else {
 
-                    filtrados = data;
+                    const catApi =
+                        categoriasMap[categoria]?.api;
 
+                    urls = catApi
+                        ? [
+                            `https://dummyjson.com/products/category/${catApi}`
+                        ]
+                        : [
+                            "https://dummyjson.com/products/category/smartphones",
+                            "https://dummyjson.com/products/category/laptops"
+                        ];
                 }
 
-                setDestacados(filtrados);
+                const responses = await Promise.all(
+                    urls.map((url) => fetch(url))
+                );
 
-            })
+                const data = await Promise.all(
+                    responses.map((r) => r.json())
+                );
 
-            .catch((err) => {
+                const todos = data.flatMap(
+                    (d) => d.products
+                );
+
+                setDestacados(
+                    adaptProducts(todos)
+                );
+
+            } catch (err) {
 
                 console.error(err);
                 setError(true);
 
-            })
-
-            .finally(() => {
+            } finally {
 
                 setLoading(false);
 
-            });
+            }
+        };
+
+        fetchData();
 
     }, [categoria]);
 

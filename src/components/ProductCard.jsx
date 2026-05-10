@@ -1,17 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
-const ProductCard = ({ id, titulo, imagen, descripcion, precio }) => {
+const ProductCard = ({
+    id,
+    titulo,
+    imagen,
+    descripcion,
+    precio,
+    abrirModal
+}) => {
 
     const navigate = useNavigate();
     const { addToCart } = useCart();
-
-    const handleNavigate = () => {
-        navigate(`/producto/${id}`);
-    };
-
     const handleAddToCart = (e) => {
-        e.stopPropagation(); // evita que dispare el click de la card
+        e.stopPropagation();
         addToCart({ id, titulo, precio, imagen });
     };
 
@@ -22,7 +24,18 @@ const ProductCard = ({ id, titulo, imagen, descripcion, precio }) => {
                 transition: "all 0.3s ease",
                 cursor: "pointer"
             }}
-            onClick={handleNavigate}
+
+            // 🔥 CLICK PRINCIPAL = ABRIR MODAL
+            onClick={() =>
+                abrirModal({
+                    id,
+                    titulo,
+                    imagen,
+                    descripcion,
+                    precio
+                })
+            }
+
             onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-5px)";
                 e.currentTarget.style.boxShadow = "0 10px 25px rgba(0,0,0,0.15)";
@@ -48,10 +61,7 @@ const ProductCard = ({ id, titulo, imagen, descripcion, precio }) => {
 
                 <p
                     className="card-text text-muted"
-                    style={{
-                        fontSize: "0.9rem",
-                        minHeight: "60px"
-                    }}
+                    style={{ fontSize: "0.9rem", minHeight: "60px" }}
                 >
                     {descripcion}
                 </p>
@@ -60,30 +70,31 @@ const ProductCard = ({ id, titulo, imagen, descripcion, precio }) => {
                     ${precio?.toLocaleString()}
                 </h4>
 
-                {/* BOTÓN AGREGAR */}
+                {/* 🛒 AGREGAR AL CARRITO */}
                 <button
-                    onClick={() =>
-                        addToCart({
-                            id,
-                            titulo,
-                            precio,
-                            imagen
-                        })
-                    }
+                    className="btn btn-dark mt-2 w-100"
+                    onClick={handleAddToCart}
                 >
                     Agregar al carrito
                 </button>
 
-                {/* BOTÓN DETALLE */}
+                {/* 🔎 VER DETALLE (NAVEGACIÓN) */}
                 <button
                     className="btn btn-outline-dark mt-2 w-100"
                     onClick={(e) => {
                         e.stopPropagation();
-                        handleNavigate();
+                        abrirModal({
+                            id,
+                            titulo,
+                            imagen,
+                            descripcion,
+                            precio
+                        });
                     }}
                 >
                     Ver detalle
                 </button>
+
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import ProductCard from "./ProductCard";
 
-function ProductGrid({ productos }) {
+function ProductGrid({ productos, abrirModal }) {
 
     return (
         <div className="row">
@@ -13,7 +13,7 @@ function ProductGrid({ productos }) {
                 >
                     <ProductCard
                         {...prod}
-                        id={prod.id}
+                        abrirModal={abrirModal}
                     />
                 </div>
 

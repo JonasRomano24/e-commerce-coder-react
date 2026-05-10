@@ -6,13 +6,12 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 import { Link } from "react-router-dom";
-
 import CartWidget from "./CartWidget";
-
+import { useCart } from "../context/CartContext";
 import "../css/navbar.css";
 
 function NavbarBT({ setBusqueda }) {
-
+    const { totalItems } = useCart();
     return (
         <Navbar
             expand="lg"
@@ -95,8 +94,12 @@ function NavbarBT({ setBusqueda }) {
                             </NavDropdown.Item>
 
                         </NavDropdown>
-
-                        <CartWidget />
+                        <Nav.Link
+                            as={Link}
+                            to="/cart"
+                        >
+                            🛒 {totalItems}
+                        </Nav.Link>
 
                     </Nav>
 

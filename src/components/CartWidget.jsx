@@ -1,20 +1,14 @@
 import { useCart } from "../context/CartContext";
 
-function CartWidget() {
+const CartWidget = () => {
 
     const { totalItems } = useCart();
 
     return (
-        <div className="d-flex align-items-center gap-2">
-
-            <span>🛒</span>
-
-            <span className="badge bg-dark">
-                {totalItems}
-            </span>
-
-        </div>
+        <span style={{ color: "white" }}>
+            🛒 {totalItems}
+        </span>
     );
-}
+};
 
 export default CartWidget;

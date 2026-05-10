@@ -1,18 +1,30 @@
 import ProductSlider from "./ProductSlider";
 import ProductGrid from "./ProductGrid";
 import CategoryFilter from "./CategoryFilter";
+import ProductModal from "./ProductModal";
 
 import { getProducts } from "../mock/asyncData";
 import { useDestacados } from "../hooks/useDestacados";
 import { useProductos } from "../hooks/useProductos";
 import { filterProducts } from "../helpers/filterProducts";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 function ItemListContainer({ busqueda }) {
 
     const { categoria = "todos" } = useParams();
     const { destacados, loading, error } = useDestacados(categoria);
     const { productos } = useProductos(categoria);
+    const [showModal, setShowModal] = useState(false);
+    const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+    const abrirModal = (producto) => {
+        setProductoSeleccionado(producto);
+        setShowModal(true);
+    };
+
+    const cerrarModal = () => {
+        setShowModal(false);
+    };
 
     return (
         <div className="container mt-4">
@@ -54,6 +66,13 @@ function ItemListContainer({ busqueda }) {
                     productos,
                     busqueda
                 )}
+                abrirModal={abrirModal}
+            />
+
+            <ProductModal
+                show={showModal}
+                handleClose={cerrarModal}
+                producto={productoSeleccionado}
             />
 
         </div>
